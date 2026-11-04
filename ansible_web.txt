@@ -1,0 +1,37 @@
+---
+- name: Deploy a Simple Web Application
+  hosts: webservers
+  become: yes
+
+  tasks:
+
+    - name: Install Apache web server
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Create HTML web page
+      copy:
+        content: |
+          <html>
+          <head>
+            <title>My Ansible Application</title>
+          </head>
+          <body>
+            <h1>Welcome to Ansible!</h1>
+            <p>Web application deployed successfully.</p>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: Start and enable Apache service
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+    - name: Display success message
+      debug:
+        msg: "Application deployed successfully!"
